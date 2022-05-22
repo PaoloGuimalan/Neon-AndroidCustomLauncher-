@@ -46,10 +46,12 @@ export default function Home({navigation}) {
   useEffect(() => {
     getBatteryLevel().then((battery) => {
       setbatteryLevel(battery)
-      setInterval(() => {
-        setbatteryLevel(battery)
-      }, 60000)
     });
+    setInterval(() => {
+      getBatteryLevel().then((battery) => {
+        setbatteryLevel(battery)
+      });
+    }, 60000);
     getAndroidId().then((andID) => {
       setandroidID(andID)
     })

@@ -24,7 +24,7 @@ const AppList = () => {
         setcliArray(["Unpacking...", "Configuring Native Modules", ...cliArray])
       }, 1000);
       setTimeout(() => {
-        setcliArray(["Loaded Successfuly!", "Unpacking...","Configuring Native Modules", ...cliArray])
+        setcliArray(["Loaded Successfully!", "Unpacking...","Configuring Native Modules", ...cliArray])
       }, 1500);
 
       const arr = appsResult.replace(/\[, ]/g, "[]").split("[]")
