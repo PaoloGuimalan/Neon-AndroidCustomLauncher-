@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, NativeModules, ScrollView, Image } from 'react-native'
 import React, { useState, useEffect } from 'react'
+import Icon from 'react-native-vector-icons/Ionicons'
 
 const AppList = () => {
 
@@ -30,6 +31,8 @@ const AppList = () => {
       const arr = appsResult.replace(/\[, ]/g, "[]").split("[]")
       arr.shift()
       arr.pop()
+      arr.sort()
+      arr.reverse()
       setallApps(arr);
       // console.log(arr)
       // console.log(appsResult.replace(/\[, ]/g, "[]").split("[]")[1].replace(/\"/g, "").split(","))
@@ -75,7 +78,7 @@ const AppList = () => {
         setcliArray([`${appPreview[0]} openning...`,`${appPreview[0]} scanning...`,`${appPreview[0]} initializing...`, ...cliArray])
       }, 1500);
       setTimeout(() => {
-        setcliArray([`${appPreview[0]} running!`,`${appPreview[0]} Openning...`,`${appPreview[0]} scanning...`,`${appPreview[0]} initializing...`, ...cliArray])
+        setcliArray([`${appPreview[0]} running!`,`${appPreview[0]} openning...`,`${appPreview[0]} scanning...`,`${appPreview[0]} initializing...`, ...cliArray])
       }, 2000);
       setTimeout(() => {
         NativeModules.InstalledApps.launchApplication(appPreview[1]);
@@ -92,6 +95,7 @@ const AppList = () => {
       <View style={ApplistStyle.absoluteView}>
         {appPreview == undefined || appPreview.length == 0? (
           <View style={ApplistStyle.viewToggleApp}>
+            <Text style={ApplistStyle.iconPreviewDefault}><Icon name='warning-outline' size={30} /></Text>
             <Text style={ApplistStyle.labelPreviewDefault}>Select an App</Text>
           </View>
         ) : (
@@ -194,7 +198,8 @@ const ApplistStyle = StyleSheet.create({
       borderBottomRightRadius: 50,
       width: "100%",
       height: "15%",
-      maxHeight: "15%",
+      maxHeight: 80,
+      minHeight: 80,
       padding: 10,
       paddingLeft: 40
     },
@@ -215,6 +220,10 @@ const ApplistStyle = StyleSheet.create({
       color: "cyan"
     },
     labelPreviewDefault:{
+      color: "cyan",
+      marginTop: 0
+    },
+    iconPreviewDefault:{
       color: "cyan",
       marginTop: 30
     },

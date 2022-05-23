@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, StatusBar, Animated, TextInput, PermissionsAndroid, BackHandler } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, StatusBar, Animated, TextInput, NativeModules, PermissionsAndroid, BackHandler } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { 
   getBatteryLevel, 
@@ -13,6 +13,7 @@ import {
 } from 'react-native-device-info';
 
 import geolocation from 'react-native-geolocation-service'
+import Icon from 'react-native-vector-icons/Ionicons'
 
 export default function Home({navigation}) {
 
@@ -311,8 +312,32 @@ export default function Home({navigation}) {
     textTime:{
       color: "cyan",
       fontSize: 10
+    },
+    viewHomeApps:{
+      backgroundColor: "black",
+      width: "100%",
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      flexDirection: "row"
+    },
+    iconHomeApps:{
+      width: 50,
+      height: 50,
+      borderWidth: 1,
+      borderColor: "cyan",
+      backgroundColor: "black",
+      color: "cyan",
+      borderRadius: 10,
+      textAlign: "center",
+      textAlignVertical: "center",
+      margin: 1
     }
   });
+
+  const homeAppsOpenner = (appName) => {
+    NativeModules.InstalledApps.launchApplication(appName);
+  }
 
   return (
     <View style={styles.container}>
@@ -324,7 +349,7 @@ export default function Home({navigation}) {
           <Text style={styles.topLabel}>Disk Space: {(freedisk / 1024 / 1024 / 1024).toFixed(2)} GB</Text>
         </View>
         <View style={styles.sideViewDetailsTop}>
-          <Text style={styles.batteryLabel}>{Math.trunc(batteryLevel * 100)}%</Text>
+          <Text style={styles.batteryLabel}>{Math.round(batteryLevel * 100)}%</Text>
         </View>
       </View>
       <View style={styles.middleView}>
@@ -336,6 +361,12 @@ export default function Home({navigation}) {
       </View>
       <View style={styles.bottomView}>
         <View style={styles.viewBottomUno}>
+          <View style={styles.viewHomeApps}>
+            <Text style={styles.iconHomeApps} onPress={() => {homeAppsOpenner("com.android.settings")}}><Icon name='settings-outline' size={20} /></Text>
+            <Text style={styles.iconHomeApps} onPress={() => {homeAppsOpenner("com.coloros.filemanager")}}><Icon name='folder-outline' size={20} /></Text>
+            <Text style={styles.iconHomeApps} onPress={() => {homeAppsOpenner("com.android.mms")}}><Icon name='chatbox-outline' size={20} /></Text>
+            <Text style={styles.iconHomeApps} onPress={() => {homeAppsOpenner("com.android.contacts")}}><Icon name='call-outline' size={20} /></Text>
+          </View>
           <Text style={styles.bottomLabelText}>{locationStatus? "Location Enabled" : "Location Disabled"}</Text>
           <Text style={styles.bottomLabelText}>{coordinates? `Lat: ${coordinates.latitude} | Lng: ${coordinates.longitude}` : "Unable to Scan Location"}</Text>
         </View>
