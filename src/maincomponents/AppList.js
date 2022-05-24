@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, NativeModules, ScrollView, Image } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
+import { processCommand } from '../libraries/sounds'
 
 const AppList = () => {
 
@@ -20,12 +21,15 @@ const AppList = () => {
 
       setTimeout(() => {
         setcliArray(["Configuring Native Modules", ...cliArray])
+        processCommand()
       }, 500);
       setTimeout(() => {
         setcliArray(["Unpacking...", "Configuring Native Modules", ...cliArray])
+        processCommand()
       }, 1000);
       setTimeout(() => {
         setcliArray(["Loaded Successfully!", "Unpacking...","Configuring Native Modules", ...cliArray])
+        processCommand()
       }, 1500);
 
       const arr = appsResult.replace(/\[, ]/g, "[]").split("[]")
@@ -56,6 +60,7 @@ const AppList = () => {
       }
       else{
         setcliArray([`${label} in preview`, ...cliArray])
+        processCommand()
         setappPreview([label, name, icon]);
       }
     }
@@ -70,19 +75,31 @@ const AppList = () => {
     try{
       setTimeout(() => {
         setcliArray([`${appPreview[0]} initializing...`, ...cliArray])
+        processCommand()
       }, 500);
       setTimeout(() => {
-        setcliArray([`${appPreview[0]} scanning...`,`${appPreview[0]} initializing...`, ...cliArray])
+        var percentage = 0;
+        var precInd = "▧";
+        var precDec = "▢";
+        var interval = setInterval(() => {
+          if(percentage < 11){
+            setcliArray([`processing [${precInd.repeat(percentage)}${precDec.repeat(10 - percentage)}]`,`${appPreview[0]} initializing...`, ...cliArray])
+            percentage = percentage + 1
+          }
+          else{
+            clearInterval(interval);
+            setcliArray([`Launching \"${appPreview[0]}\"`,`processing [Done!]`,`${appPreview[0]} initializing...`, ...cliArray])
+            processCommand()
+            setTimeout(() => {
+              NativeModules.InstalledApps.launchApplication(appPreview[1]);
+            }, 500);
+          }
+        }, 500)
+        processCommand()
       }, 1000);
-      setTimeout(() => {
-        setcliArray([`${appPreview[0]} openning...`,`${appPreview[0]} scanning...`,`${appPreview[0]} initializing...`, ...cliArray])
-      }, 1500);
-      setTimeout(() => {
-        setcliArray([`${appPreview[0]} running!`,`${appPreview[0]} openning...`,`${appPreview[0]} scanning...`,`${appPreview[0]} initializing...`, ...cliArray])
-      }, 2000);
-      setTimeout(() => {
-        NativeModules.InstalledApps.launchApplication(appPreview[1]);
-      }, 2500);
+      // setTimeout(() => {
+      //   NativeModules.InstalledApps.launchApplication(appPreview[1]);
+      // }, 2500);
     }
     catch(err){
       setcliArray([`Application failed to load!`, ...cliArray])
