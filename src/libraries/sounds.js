@@ -40,3 +40,41 @@ export const processCommand = () => {
         }
     })
 }
+
+export const backPress = () => {
+    var pressBack = new Sound("back_press.mp3", Sound.MAIN_BUNDLE, (error) => {
+        if(error){
+            alert(error.message);
+            return;
+        }
+        else{
+            pressBack.play((success) => {
+                if(success){
+                    pressBack.release();
+                }
+                else{
+                    alert("error!");
+                }
+            })
+        }
+    })
+}
+
+export const appPressSound = () => {
+    var appPressVar = new Sound("apppress.mp3", Sound.MAIN_BUNDLE, (error) => {
+        if(error){
+            alert(error.message);
+            return;
+        }
+        else{
+            appPressVar.play((success) => {
+                if(success){
+                    appPressVar.release();
+                }
+                else{
+                    alert("error!");
+                }
+            })
+        }
+    })
+}

@@ -1,9 +1,9 @@
-import { View, Text, StyleSheet, NativeModules, ScrollView, Image } from 'react-native'
+import { View, Text, StyleSheet, NativeModules, ScrollView, Image, BackHandler } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
-import { processCommand } from '../libraries/sounds'
+import { appPressSound, backPress, processCommand } from '../libraries/sounds'
 
-const AppList = () => {
+const AppList = ({navigation}) => {
 
   const [allApps, setallApps] = useState(["...loading"]);
   const [appPreview, setappPreview] = useState([]);
@@ -14,6 +14,13 @@ const AppList = () => {
     // console.log("All Packages", NativeModules.InstalledApps.getApps);
     loaderApps()
   }, []);
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', function() {
+      backPress()
+      // navigation.navigate("Home");
+    });
+  }, [])
 
   const loaderApps = async () => {
     try{
@@ -53,6 +60,7 @@ const AppList = () => {
     const icon = app.replace(/\"/g, "").split(",")[2];
 
     // console.log([label, name, icon])
+    appPressSound()
 
     try{
       if(app.replace(/\"/g, "").split(",")[1] == "" || app.replace(/\"/g, "").split(",")[1] == undefined || app.replace(/\"/g, "").split(",")[1] == null){
@@ -72,6 +80,7 @@ const AppList = () => {
   }
 
   const openAppPress = () => {
+    appPressSound()
     try{
       setTimeout(() => {
         setcliArray([`${appPreview[0]} initializing...`, ...cliArray])
@@ -133,7 +142,7 @@ const AppList = () => {
           )
         })}
       </ScrollView>
-      <ScrollView style={ApplistStyle.commandLineView}>
+      <ScrollView style={ApplistStyle.commandLineView} contentContainerStyle={ApplistStyle.absoluteCli}>
         {cliArray.map((cli,i) => {
           return(
             <Text key={i} style={ApplistStyle.commandLineText}>&gt; {cli}</Text>
@@ -178,18 +187,19 @@ const ApplistStyle = StyleSheet.create({
     },
     absoluteView:{
       backgroundColor: "black",
-      width: 200,
-      height: 200,
-      borderBottomLeftRadius: 200,
+      width: "50%",
+      height: 150,
+      borderRadius: 10,
       alignItems: "center",
-      borderBottomWidth: 2,
-      borderLeftWidth: 2,
+      borderWidth: 1,
       borderColor: "cyan",
       marginBottom: 5,
       position: "absolute",
+      justifyContent: "center",
       right: 0,
-      top: 0,
+      top: 40,
       zIndex: 1,
+      opacity: 0.7
     },
     textLabelabsolute:{
       color: "cyan"
@@ -209,29 +219,39 @@ const ApplistStyle = StyleSheet.create({
     commandLineView:{
       borderColor: "cyan",
       borderWidth: 1,
-      borderTopLeftRadius: 5,
-      borderTopRightRadius: 5,
-      borderBottomLeftRadius: 50,
-      borderBottomRightRadius: 50,
-      width: "100%",
-      height: "15%",
-      maxHeight: 80,
-      minHeight: 80,
+      borderTopLeftRadius: 10,
+      borderTopRightRadius: 10,
+      borderBottomLeftRadius: 10,
+      borderBottomRightRadius: 10,
+      width: "50%",
+      height: "50%",
+      maxHeight: 300,
+      minHeight: 300,
       padding: 10,
-      paddingLeft: 40
+      paddingLeft: 10,
+      position: "absolute",
+      right: 0,
+      top: 195,
+      backgroundColor: "black",
+      zIndex: 2,
+      opacity: 0.7
+    },
+    absoluteCli:{
+      // position: "absolute"
     },
     commandLineText:{
       color: "lime",
       fontSize: 12
     },
     viewToggleApp:{
-      backgroundColor: "black",
-      width: "70%",
-      maxWidth: "70%",
-      marginTop: 40,
-      marginLeft: 50,
+      backgroundColor: "transparent",
+      width: "90%",
+      maxWidth: "90%",
+      marginTop: 0,
+      marginLeft: 0,
       alignItems: "center",
-      borderBottomStartRadius: 50
+      borderRadius: 10,
+      opacity: 1
     },
     labelPreview:{
       color: "cyan"
@@ -242,7 +262,7 @@ const ApplistStyle = StyleSheet.create({
     },
     iconPreviewDefault:{
       color: "cyan",
-      marginTop: 30
+      marginTop: 0
     },
     labelPreviewButton:{
       color: "black",

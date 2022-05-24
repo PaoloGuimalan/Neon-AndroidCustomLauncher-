@@ -14,7 +14,7 @@ import {
 
 import geolocation from 'react-native-geolocation-service'
 import Icon from 'react-native-vector-icons/Ionicons'
-import { openAppList } from '../libraries/sounds';
+import { appPressSound, openAppList } from '../libraries/sounds';
 
 export default function Home({navigation}) {
 
@@ -338,6 +338,7 @@ export default function Home({navigation}) {
   });
 
   const homeAppsOpenner = (appName) => {
+    appPressSound()
     NativeModules.InstalledApps.launchApplication(appName);
   }
 
