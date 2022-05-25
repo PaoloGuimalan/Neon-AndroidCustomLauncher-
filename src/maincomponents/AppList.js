@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, NativeModules, ScrollView, Image, BackHandler }
 import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { appPressSound, backPress, processCommand } from '../libraries/sounds'
+import Axios from 'axios';
 
 const AppList = ({navigation}) => {
 
@@ -142,6 +143,12 @@ const AppList = ({navigation}) => {
           )
         })}
       </ScrollView>
+      <View style={ApplistStyle.viewWeather}>
+        <Text style={ApplistStyle.textWeather}>Weather Update</Text>
+      </View>
+      <View style={ApplistStyle.viewAstronomy}>
+        <Text style={ApplistStyle.textAstronomy}>Astronomical Update</Text>
+      </View>
     </View>
   )
 }
@@ -250,7 +257,7 @@ const ApplistStyle = StyleSheet.create({
       opacity: 1
     },
     labelPreview:{
-      color: "cyan"
+      color: "cyan",
     },
     labelPreviewDefault:{
       color: "cyan",
@@ -270,6 +277,44 @@ const ApplistStyle = StyleSheet.create({
       paddingLeft: 10,
       paddingRight: 10,
       borderRadius: 5
+    },
+    viewWeather:{
+      borderColor: "cyan",
+      borderWidth: 1,
+      position: "absolute",
+      right: 0,
+      zIndex: 2,
+      width: "45%",
+      top: 500,
+      borderRadius: 10,
+      minHeight: 80,
+      opacity: 0.7,
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center"
+    },
+    textWeather:{
+      color: "cyan",
+      fontSize: 12
+    },
+    viewAstronomy:{
+      borderColor: "cyan",
+      borderWidth: 1,
+      position: "absolute",
+      right: 0,
+      zIndex: 2,
+      width: "45%",
+      top: 585,
+      borderRadius: 10,
+      minHeight: 80,
+      opacity: 0.7,
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center"
+    },
+    textAstronomy:{
+      color: "cyan",
+      fontSize: 12
     }
 })
 

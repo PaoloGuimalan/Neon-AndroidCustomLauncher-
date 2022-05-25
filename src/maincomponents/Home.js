@@ -15,6 +15,7 @@ import {
 import geolocation from 'react-native-geolocation-service'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { appPressSound, openAppList } from '../libraries/sounds';
+import Axios from 'axios'
 
 export default function Home({navigation}) {
 
@@ -93,6 +94,20 @@ export default function Home({navigation}) {
       // navigation.popToTop()
       return true;
     });
+  }, [])
+
+  useEffect(() => {
+    // Axios.get('http://api.weatherapi.com/v1/current.json?key=494c0f6d4c3f4b4b81b74942211108&q=Philippines&aqi=yes').then(() => {
+    //   alert("Hello");
+    // }).catch((err) => {
+    //   alert("Cannot Load Weather");
+    // })
+
+    // Axios.get('http://api.weatherapi.com/v1/astronomy.json?key=494c0f6d4c3f4b4b81b74942211108&q=Philippines&dt=2022-05-25').then(() => {
+    //   alert("Hello");
+    // }).catch((err) => {
+    //   alert("Cannot Load Weather");
+    // })
   }, [])
 
   const locationPremission = async () => {
