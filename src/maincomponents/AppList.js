@@ -15,13 +15,6 @@ const AppList = ({navigation}) => {
     loaderApps()
   }, []);
 
-  useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', function() {
-      backPress()
-      // navigation.navigate("Home");
-    });
-  }, [])
-
   const loaderApps = async () => {
     try{
       const appsResult = NativeModules.InstalledApps.getApps;
@@ -169,17 +162,20 @@ const ApplistStyle = StyleSheet.create({
         textAlign: "left",
         paddingTop: 20,
         paddingBottom: 10,
-        paddingLeft: 30
+        paddingLeft: 25
     },
     noteStyle:{
         color: "cyan",
         fontSize: 15,
         margin: 2,
-        textAlign: "left"
+        textAlign: "left",
+        width: "50%",
+        borderBottomColor: "cyan",
+        borderBottomWidth: 0.5
     },
     scrollViewStyle:{
       padding: 10,
-      paddingLeft: 30,
+      paddingLeft: 15,
       paddingRight: 30
     },
     scrollStyle:{
@@ -187,7 +183,7 @@ const ApplistStyle = StyleSheet.create({
     },
     absoluteView:{
       backgroundColor: "black",
-      width: "50%",
+      width: "45%",
       height: 150,
       borderRadius: 10,
       alignItems: "center",
@@ -223,7 +219,7 @@ const ApplistStyle = StyleSheet.create({
       borderTopRightRadius: 10,
       borderBottomLeftRadius: 10,
       borderBottomRightRadius: 10,
-      width: "50%",
+      width: "45%",
       height: "50%",
       maxHeight: 300,
       minHeight: 300,
@@ -241,7 +237,7 @@ const ApplistStyle = StyleSheet.create({
     },
     commandLineText:{
       color: "lime",
-      fontSize: 12
+      fontSize: 11
     },
     viewToggleApp:{
       backgroundColor: "transparent",

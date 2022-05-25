@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import type {Node} from 'react';
 import {
   SafeAreaView,
@@ -16,6 +16,7 @@ import {
   Text,
   useColorScheme,
   View,
+  BackHandler
 } from 'react-native';
 
 import {
@@ -29,6 +30,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from './src/maincomponents/Home'
 import AppList from './src/maincomponents/AppList';
+import { backPress } from './src/libraries/sounds';
 
 const MainStack = createNativeStackNavigator();
 
@@ -64,6 +66,15 @@ const App: () => Node = () => {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', function() {
+      setTimeout(() => {
+        backPress()
+      }, 200)
+      // navigation.navigate("Home");
+    });
+  }, [])
 
   return (
     <NavigationContainer>
