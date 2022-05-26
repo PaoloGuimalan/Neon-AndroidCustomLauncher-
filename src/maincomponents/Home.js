@@ -16,8 +16,13 @@ import geolocation from 'react-native-geolocation-service'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { appPressSound, openAppList } from '../libraries/sounds';
 import Axios from 'axios'
+import { useSelector, useDispatch } from 'react-redux';
+import { SET_ASTRO, SET_WEATHER } from '../redux/type/type';
+import NetInfo from '@react-native-community/netinfo'
 
 export default function Home({navigation}) {
+
+  const dispatch = useDispatch();
 
   const [logoScale, setlogoScale] = useState(false);
   const [countClick, setcountClick] = useState(0);
@@ -28,6 +33,7 @@ export default function Home({navigation}) {
   const [batteryLevel, setbatteryLevel] = useState(0);
   const [currentDate, setcurrentDate] = useState("");
   const [currentTime, setcurrentTime] = useState("");
+  const [currentDateforURL, setcurrentDateforURL] = useState("");
   const [androidID, setandroidID] = useState("");
   const [baseOSVar, setbaseOSVar] = useState("");
   const [systemBrand, setsystemBrand] = useState("");
@@ -35,6 +41,7 @@ export default function Home({navigation}) {
   const [ipadd, setipadd] = useState("");
   const [locationStatus, setlocationStatus] = useState("");
   const [coordinates, setcoordinates] = useState("");
+  const [connectionDetails, setconnectionDetails] = useState({isConnected: false, type: "none"});
 
   useEffect(() => {
     setTimeout(() => {
@@ -96,19 +103,52 @@ export default function Home({navigation}) {
     });
   }, [])
 
-  useEffect(() => {
-    // Axios.get('http://api.weatherapi.com/v1/current.json?key=494c0f6d4c3f4b4b81b74942211108&q=Philippines&aqi=yes').then(() => {
-    //   alert("Hello");
-    // }).catch((err) => {
-    //   alert("Cannot Load Weather");
-    // })
+  const weatherCatcher = () => {
+    Axios.get('http://api.weatherapi.com/v1/current.json?key=494c0f6d4c3f4b4b81b74942211108&q=Philippines&aqi=yes').then((response) => {
+      // alert("Hello");
+      dispatch({type: SET_WEATHER, weatherdata: response.data})
+    }).catch((err) => {
+      dispatch({type: SET_WEATHER, weatherdata: {}})
+    })
+  }
 
-    // Axios.get('http://api.weatherapi.com/v1/astronomy.json?key=494c0f6d4c3f4b4b81b74942211108&q=Philippines&dt=2022-05-25').then(() => {
-    //   alert("Hello");
-    // }).catch((err) => {
-    //   alert("Cannot Load Weather");
-    // })
+  const astroCatcher = () => {
+    if(currentDateforURL != ""){
+      Axios.get(`http://api.weatherapi.com/v1/astronomy.json?key=494c0f6d4c3f4b4b81b74942211108&q=Philippines&dt=${currentDateforURL}`).then((response) => {
+      // alert("Hello");
+      dispatch({type: SET_ASTRO, astrodata: response.data})
+    }).catch((err) => {
+      // alert("Cannot Load Weather");
+      dispatch({type: SET_ASTRO, astrodata: {}})
+    })
+    }
+  }
+
+  useEffect(() => {
+    // console.log("Changed!");
+    weatherCatcher();
+    astroCatcher()
+  }, [currentDate, currentDateforURL])
+
+  useEffect(() => {
+    weatherCatcher();
+    astroCatcher()
   }, [])
+
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      //dispatch
+      if(connectionDetails.isConnected != state.isConnected){
+        setconnectionDetails({isConnected: state.isConnected, type: state.type})
+        if(state.isConnected == true){
+          weatherCatcher();
+          astroCatcher()
+        }
+        // console.log(state.type);
+      }
+    });
+    unsubscribe()
+  })
 
   const locationPremission = async () => {
     try{
@@ -148,6 +188,7 @@ export default function Home({navigation}) {
     const minutes = new Date().getMinutes();
     const seconds = new Date().getSeconds();
 
+    setcurrentDateforURL(`${year}-${month}-${date}`)
     setcurrentDate(`${month} / ${date} / ${year}`);
     setcurrentTime(`${hours} : ${minutes} : ${seconds}`);
   }
@@ -271,15 +312,17 @@ export default function Home({navigation}) {
       alignItems: "flex-end"
     },
     batteryLabel:{
-      width: 50,
-      height: 50,
+      marginTop: 20,
+      width: 35,
+      height: 15,
       backgroundColor: "black",
-      borderRadius: 50,
-      borderWidth: 2,
+      borderRadius: 3,
+      borderWidth: 1,
       borderColor: "cyan",
       color: "cyan",
       textAlign: "center",
-      textAlignVertical: "center"
+      textAlignVertical: "center",
+      fontSize: 10
     },
     viewBottomUno:{
       backgroundColor: "transparent",
@@ -349,6 +392,21 @@ export default function Home({navigation}) {
       textAlign: "center",
       textAlignVertical: "center",
       margin: 1
+    },
+    miniBarStatus:{
+      borderWidth: 1,
+      borderColor: "cyan",
+      height: "10%",
+      width: 50,
+      marginTop: 20,
+      marginBottom: 15,
+      borderRadius: 10,
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center"
+    },
+    connectionStatus:{
+      color: "cyan"
     }
   });
 
@@ -367,7 +425,16 @@ export default function Home({navigation}) {
           <Text style={styles.topLabel}>Disk Space: {(freedisk / 1024 / 1024 / 1024).toFixed(2)} GB</Text>
         </View>
         <View style={styles.sideViewDetailsTop}>
-          <Text style={styles.batteryLabel}>{Math.round(batteryLevel * 100)}%</Text>
+          <View style={styles.miniBarStatus}>
+            <Text style={styles.connectionStatus}>{connectionDetails.type != "none"? connectionDetails.type == "wifi"? (
+              <Icon name='wifi-sharp' size={20} />
+            ) : (
+              <Icon name='cellular-sharp' size={20} />
+            ) : <Icon name='globe-outline' size={20} />}</Text>
+            <Text style={styles.batteryLabel}>{Math.round(batteryLevel * 100)}%</Text>
+          </View>
+          {/* <Text style={styles.batteryLabel}>{Math.round(batteryLevel * 100)}%</Text>
+          <Text style={styles.batteryLabel}>{Math.round(batteryLevel * 100)}%</Text> */}
         </View>
       </View>
       <View style={styles.middleView}>
