@@ -1,5 +1,5 @@
 const Sound = require("react-native-sound");
-Sound.setCategory('Playback');
+Sound.setCategory('Ambient');
 
 export const openAppList = () => {
     var click = new Sound('openapplist.mp3', Sound.MAIN_BUNDLE, (error) => {

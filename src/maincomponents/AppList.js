@@ -1,9 +1,13 @@
-import { View, Text, StyleSheet, NativeModules, ScrollView, Image, BackHandler } from 'react-native'
+import { View, Text, StyleSheet, NativeModules, ScrollView, Image, BackHandler, TouchableOpacity, ImageBackground } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { appPressSound, backPress, processCommand } from '../libraries/sounds'
 import Axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
+import ImgBg from '../res/imgs/bggradient.jpg'
+import ImgHex from '../res/imgs/bghex.png'
+import { SET_APPLIST } from '../redux/type/type';
+import IconSLI from 'react-native-vector-icons/SimpleLineIcons'
 
 const AppList = ({navigation}) => {
 
@@ -14,6 +18,8 @@ const AppList = ({navigation}) => {
   const weatherdata = useSelector(state => state.weatherdata);
   const astrodata = useSelector(state => state.astrodata);
   const dispatch = useDispatch();
+
+  const applist = useSelector(state => state.applist);
 
   useEffect(() => {
     // const allapps = JSON.parse(NativeModules.InstalledApps.getApps)
@@ -44,7 +50,8 @@ const AppList = ({navigation}) => {
       arr.pop()
       arr.sort()
       arr.reverse()
-      setallApps(arr);
+      dispatch({type: SET_APPLIST, applist: arr})
+      // setallApps(arr);
       // console.log(arr)
       // console.log(appsResult.replace(/\[, ]/g, "[]").split("[]")[1].replace(/\"/g, "").split(","))
     }
@@ -103,7 +110,7 @@ const AppList = ({navigation}) => {
               NativeModules.InstalledApps.launchApplication(appPreview[1]);
             }, 500);
           }
-        }, 500)
+        }, 10)
         processCommand()
       }, 1000);
       // setTimeout(() => {
@@ -117,6 +124,7 @@ const AppList = ({navigation}) => {
 
   return (
     <View style={ApplistStyle.viewStyle}>
+      <ImageBackground source={ImgHex} style={{width: "100%", height: "100%", opacity: 0.9}}>
       <Text style={ApplistStyle.textStyle}>AppList</Text>
       <View style={ApplistStyle.absoluteView}>
         {appPreview == undefined || appPreview.length == 0? (
@@ -133,12 +141,23 @@ const AppList = ({navigation}) => {
         )}
       </View>
       <ScrollView style={ApplistStyle.scrollStyle} contentContainerStyle={ApplistStyle.scrollViewStyle}>
-        {allApps.map((app, i) => {
+        {applist.map((app, i) => {
           return(
-            <View key={i} style={ApplistStyle.viewApp}>
-              {/* <Image style={ApplistStyle.imageSizing} resizeMode={'contain'} source={{uri: "data:image/png;base64," + app.replace(/\"/g, "").split(",")[2]}} /> */}
-              <Text style={ApplistStyle.noteStyle} onPress={() => {openApp(app)}} >{app.replace(/\"/g, "").split(",")[0]}</Text>
-            </View>
+            <TouchableOpacity key={i} onPress={() => {openApp(app)}}>
+              <View style={ApplistStyle.viewApp}>
+                {/* <Image style={ApplistStyle.imageSizing} resizeMode={'contain'} source={{uri: "data:image/png;base64," + app.replace(/\"/g, "").split(",")[2]}} /> */}
+                <Text style={ApplistStyle.noteStyle} numberOfLines={1}>{app.replace(/\"/g, "").split(",")[0]}</Text>
+              </View>
+            </TouchableOpacity>
+            // <TouchableOpacity key={i} onPress={() => {openApp(app)}}>
+            //   <View style={ApplistStyle.hexagon}>
+            //     <View style={ApplistStyle.hexagonInner} />
+            //     <View style={ApplistStyle.hexagonBefore}>
+            //       <Image style={ApplistStyle.imageSizing} resizeMode={'contain'} source={{uri: "data:image/png;base64," + app.replace(/\"/g, "").split(",")[2]}} />
+            //     </View>
+            //     <View style={ApplistStyle.hexagonAfter} />
+            //   </View>
+            // </TouchableOpacity>
           )
         })}
       </ScrollView>
@@ -176,22 +195,29 @@ const AppList = ({navigation}) => {
           </View>
         )}
       </View>
+      <TouchableOpacity style={ApplistStyle.viewDevTools}>
+        <View  style={ApplistStyle.viewDevUnder}>
+          <Text style={{color: "lime"}}>Developer Tools</Text>
+          <IconSLI name='arrow-right' color='lime' size={15} />
+        </View>
+      </TouchableOpacity>
+      </ImageBackground>
     </View>
   )
 }
 
 const ApplistStyle = StyleSheet.create({
     viewStyle:{
-        backgroundColor: "black",
+        backgroundColor: "transparent",
         flex: 1,
         justifyContent: "center",
         alignItems: "center"
     },
     textStyle:{
-        color: "cyan",
+        color: "lime",
         fontSize: 20,
         marginTop: 10,
-        backgroundColor: "black",
+        backgroundColor: "transparent",
         width: "100%",
         textAlign: "left",
         paddingTop: 20,
@@ -199,13 +225,18 @@ const ApplistStyle = StyleSheet.create({
         paddingLeft: 25
     },
     noteStyle:{
-        color: "cyan",
+        color: "lime",
         fontSize: 15,
         margin: 2,
-        textAlign: "left",
+        textAlign: "center",
         width: "50%",
-        borderBottomColor: "cyan",
-        borderBottomWidth: 0.5
+        borderColor: "lime",
+        borderWidth: 1,
+        backgroundColor: "black",
+        opacity: 1,
+        height: 30,
+        textAlignVertical: "center",
+        borderRadius: 10
     },
     scrollViewStyle:{
       padding: 10,
@@ -214,6 +245,7 @@ const ApplistStyle = StyleSheet.create({
     },
     scrollStyle:{
       width: "100%",
+      backgroundColor: "transparent"
     },
     absoluteView:{
       backgroundColor: "black",
@@ -222,7 +254,7 @@ const ApplistStyle = StyleSheet.create({
       borderRadius: 10,
       alignItems: "center",
       borderWidth: 1,
-      borderColor: "cyan",
+      borderColor: "lime",
       marginBottom: 5,
       position: "absolute",
       justifyContent: "center",
@@ -232,12 +264,12 @@ const ApplistStyle = StyleSheet.create({
       opacity: 0.7
     },
     textLabelabsolute:{
-      color: "cyan"
+      color: "lime"
     },
     viewApp:{
       borderWidth: 0,
-      borderColor: "cyan",
-      marginBottom: 2,
+      borderColor: "lime",
+      marginBottom: 2
     },
     imageSizing:{
       width: 40,
@@ -247,7 +279,7 @@ const ApplistStyle = StyleSheet.create({
       borderRadius: 40
     },
     commandLineView:{
-      borderColor: "cyan",
+      borderColor: "lime",
       borderWidth: 1,
       borderTopLeftRadius: 10,
       borderTopRightRadius: 10,
@@ -284,29 +316,29 @@ const ApplistStyle = StyleSheet.create({
       opacity: 1
     },
     labelPreview:{
-      color: "cyan",
+      color: "lime",
     },
     labelPreviewDefault:{
-      color: "cyan",
+      color: "lime",
       marginTop: 0
     },
     iconPreviewDefault:{
-      color: "cyan",
+      color: "lime",
       marginTop: 0
     },
     labelPreviewButton:{
       color: "black",
-      backgroundColor: "cyan",
+      backgroundColor: "lime",
       marginTop: 5,
       borderWidth: 1,
-      borderColor: "cyan",
+      borderColor: "lime",
       padding: 2,
       paddingLeft: 10,
       paddingRight: 10,
       borderRadius: 5
     },
     viewWeather:{
-      borderColor: "cyan",
+      borderColor: "lime",
       borderWidth: 1,
       position: "absolute",
       right: 0,
@@ -318,14 +350,15 @@ const ApplistStyle = StyleSheet.create({
       opacity: 0.7,
       flex: 1,
       justifyContent: "center",
-      alignItems: "center"
+      alignItems: "center",
+      backgroundColor: "black",
     },
     textWeather:{
-      color: "cyan",
+      color: "lime",
       fontSize: 12
     },
     viewAstronomy:{
-      borderColor: "cyan",
+      borderColor: "lime",
       borderWidth: 1,
       position: "absolute",
       right: 0,
@@ -337,10 +370,33 @@ const ApplistStyle = StyleSheet.create({
       opacity: 0.7,
       flex: 1,
       justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "black",
+    },
+    viewDevTools:{
+      borderColor: "lime",
+      borderWidth: 1,
+      position: "absolute",
+      right: 0,
+      zIndex: 2,
+      width: "45%",
+      top: 670,
+      borderRadius: 10,
+      minHeight: 40,
+      opacity: 0.7,
+      flex: 1,
+      justifyContent: "space-evenly",
+      alignItems: "center",
+      backgroundColor: "black",
+      flexDirection: "row"
+    },
+    viewDevUnder:{
+      flexDirection: "row",
+      justifyContent: "space-evenly",
       alignItems: "center"
     },
     textAstronomy:{
-      color: "cyan",
+      color: "lime",
       fontSize: 12
     },
     weatherViewResult:{
@@ -358,9 +414,55 @@ const ApplistStyle = StyleSheet.create({
       height: 40
     },
     iconAstronomy:{
-      color: "cyan",
+      color: "lime",
       margin: 10,
       marginLeft: -5
+    },
+    hexagon: {
+      width: 80,
+      height: 30,
+      marginBottom: 55
+    },
+    hexagonInner: {
+      width: 70,
+      height: 30,
+      backgroundColor: "transparent",
+      borderLeftWidth: 0,
+      borderRightWidth: 0,
+      borderColor: "rgba(0, 255, 255, .5)"
+    },
+    hexagonAfter: {
+      position: "absolute",
+      bottom: -25,
+      left: 0,
+      width: 0,
+      height: 0,
+      borderStyle: "solid",
+      borderLeftWidth: 35,
+      borderLeftColor: "transparent",
+      borderRightWidth: 35,
+      borderRightColor: "rgba(0, 255, 255, .5)",
+      borderTopWidth: 25,
+      borderTopColor: "transparent",
+      paddingTop: 20,
+      borderRadius: 100
+    },
+    hexagonBefore: {
+      position: "absolute",
+      top: -25,
+      left: 0,
+      width: 0,
+      height: 0,
+      borderStyle: "solid",
+      borderLeftWidth: 35,
+      borderLeftColor: "rgba(0, 255, 255, .5)",
+      borderRightWidth: 35,
+      borderRightColor: "transparent",
+      borderBottomWidth: 25,
+      borderBottomColor: "transparent",
+      alignItems: 'center',
+      paddingTop: 20,
+      borderRadius: 100
     }
 })
 

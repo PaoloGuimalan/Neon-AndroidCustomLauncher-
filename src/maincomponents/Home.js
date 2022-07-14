@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, StatusBar, Animated, TextInput, NativeModules, PermissionsAndroid, BackHandler } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, StatusBar, Animated, TextInput, NativeModules, PermissionsAndroid, BackHandler, ImageBackground } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { 
   getBatteryLevel, 
@@ -19,6 +19,9 @@ import Axios from 'axios'
 import { useSelector, useDispatch } from 'react-redux';
 import { SET_ASTRO, SET_WEATHER } from '../redux/type/type';
 import NetInfo from '@react-native-community/netinfo'
+import * as Animatable from 'react-native-animatable'
+import ImgBg from '../res/imgs/bggradient.jpg'
+import ImgHex from '../res/imgs/bghex.png'
 
 export default function Home({navigation}) {
 
@@ -60,6 +63,16 @@ export default function Home({navigation}) {
     setInterval(() => {
       getBatteryLevel().then((battery) => {
         setbatteryLevel(battery)
+        // if(Math.round(battery * 100) < 31){
+        //   if(logoColor){
+        //     setlogoColor(false)
+        //   }
+        // }
+        // else{
+        //   if(logoColor == false){
+        //     setlogoColor(true)
+        //   }
+        // }
       });
     }, 60000);
     getAndroidId().then((andID) => {
@@ -121,6 +134,9 @@ export default function Home({navigation}) {
       // alert("Cannot Load Weather");
       dispatch({type: SET_ASTRO, astrodata: {}})
     })
+    }
+    else{
+      dispatch({type: SET_ASTRO, astrodata: {}})
     }
   }
 
@@ -221,32 +237,36 @@ export default function Home({navigation}) {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: 'black',
+      backgroundColor: 'transparent',
       alignItems: 'center',
       justifyContent: 'center',
     },
     text:{
-      color: 'cyan',
+      color: 'lime',
       fontSize: 20
     },
     textSmall:{
-      color: 'cyan',
+      color: 'lime',
       fontSize: 10
     },
     viewLogo:{
-      borderWidth: 3,
-      borderColor: logoColor? "cyan" : "grey",
+      borderWidth: 2,
+      borderColor: logoColor? "lime" : "red",
       width: 150,
       height: 150,
       borderRadius: 150,
       alignItems: "center",
       justifyContent: "center",
       scaleX: scaleCount,
-      scaleY: scaleCount
+      scaleY: scaleCount,
+      borderStyle: "solid",
+      backgroundColor: "black",
+      opacity: 0.9
     },
     textLogo:{
-      color: logoColor? "cyan" : "grey",
-      fontSize: 25
+      color: logoColor? "lime" : "red",
+      fontSize: 25,
+      opacity: 0.9
     },
     textInputStyle:{
         borderColor: "grey",
@@ -258,7 +278,7 @@ export default function Home({navigation}) {
         borderRadius: 10
     },
     detailsStyle:{
-      backgroundColor: "black",
+      backgroundColor: "transparent",
       width: "100%",
       height: "auto",
       maxHeight: 150,
@@ -269,7 +289,7 @@ export default function Home({navigation}) {
       justifyContent: "center"
     },
     middleView:{
-      backgroundColor: "black",
+      backgroundColor: "transparent",
       height: "auto",
       width: "100%",
       flex: 1,
@@ -295,17 +315,17 @@ export default function Home({navigation}) {
       borderRadius: 10,
       fontSize: 12,
       borderWidth: 1,
-      borderColor: "cyan",
-      color: "cyan",
+      borderColor: "lime",
+      color: "lime",
     },
     viewDetailsTop:{
       width: "50%",
       height: "100%",
-      backgroundColor: "black",
+      backgroundColor: "transparent",
       justifyContent: "center"
     },
     sideViewDetailsTop:{
-      backgroundColor: "black",
+      backgroundColor: "transparent",
       width: "50%",
       height: "100%",
       justifyContent: "center",
@@ -318,8 +338,8 @@ export default function Home({navigation}) {
       backgroundColor: "black",
       borderRadius: 3,
       borderWidth: 1,
-      borderColor: "cyan",
-      color: "cyan",
+      borderColor: "lime",
+      color: "lime",
       textAlign: "center",
       textAlignVertical: "center",
       fontSize: 10
@@ -346,8 +366,8 @@ export default function Home({navigation}) {
       borderRadius: 10,
       fontSize: 12,
       borderWidth: 1,
-      borderColor: "cyan",
-      color: "cyan",
+      borderColor: "lime",
+      color: "lime",
     },
     dateView:{
       backgroundColor: "black",
@@ -360,21 +380,21 @@ export default function Home({navigation}) {
       borderRadius: 10,
       fontSize: 12,
       borderWidth: 1,
-      borderColor: "cyan",
-      color: "cyan",
+      borderColor: "lime",
+      color: "lime",
       justifyContent: "center",
       alignItems: "center"
     },
     textDate:{
-      color: "cyan",
+      color: "lime",
       fontSize: 13
     },
     textTime:{
-      color: "cyan",
+      color: "lime",
       fontSize: 10
     },
     viewHomeApps:{
-      backgroundColor: "black",
+      backgroundColor: "transparent",
       width: "100%",
       flex: 1,
       justifyContent: "center",
@@ -385,9 +405,9 @@ export default function Home({navigation}) {
       width: 50,
       height: 50,
       borderWidth: 1,
-      borderColor: "cyan",
+      borderColor: "lime",
       backgroundColor: "black",
-      color: "cyan",
+      color: "lime",
       borderRadius: 10,
       textAlign: "center",
       textAlignVertical: "center",
@@ -395,7 +415,7 @@ export default function Home({navigation}) {
     },
     miniBarStatus:{
       borderWidth: 1,
-      borderColor: "cyan",
+      borderColor: "lime",
       height: "10%",
       width: 50,
       marginTop: 20,
@@ -403,10 +423,23 @@ export default function Home({navigation}) {
       borderRadius: 10,
       flex: 1,
       justifyContent: "center",
-      alignItems: "center"
+      alignItems: "center",
+      backgroundColor: "black"
     },
     connectionStatus:{
-      color: "cyan"
+      color: "lime"
+    },
+    viewLogoInside:{
+      borderWidth: 25,
+      borderColor: logoColor? "lime" : "red",
+      width: 140,
+      height: 140,
+      borderRadius: 137,
+      alignItems: "center",
+      justifyContent: "center",
+      borderStyle: "dashed",
+      backgroundColor: "black",
+      opacity: 1
     }
   });
 
@@ -418,6 +451,7 @@ export default function Home({navigation}) {
   return (
     <View style={styles.container}>
     <StatusBar hidden={true} />
+      <ImageBackground source={ImgHex} style={{width: "100%", height: "100%", opacity: 0.9}}>
       <View style={styles.detailsStyle}>
         <View style={styles.viewDetailsTop}>
           <Text style={styles.topLabel}>{systemBrand}</Text>
@@ -440,7 +474,9 @@ export default function Home({navigation}) {
       <View style={styles.middleView}>
         <TouchableOpacity onPress={animatedLogo}>
           <Animated.View style={styles.viewLogo}>
-              <Text style={styles.textLogo}>Neon</Text>
+              <Animatable.View animation="rotate" duration={10000} easing="linear" iterationCount="infinite" style={styles.viewLogoInside}>
+                <Animatable.Text animation="rotate" direction="reverse" duration={10000} easing="linear" iterationCount="infinite" style={styles.textLogo}>Neon</Animatable.Text>
+              </Animatable.View>
           </Animated.View>
         </TouchableOpacity>
       </View>
@@ -462,6 +498,7 @@ export default function Home({navigation}) {
           </View>
         </View>
       </View>
+      </ImageBackground>
     </View>
   )
 }

@@ -1,9 +1,10 @@
 import { createStore, combineReducers } from "redux";
-import { setastrodata, setweatherdata } from "../action/action";
+import { setapplist, setastrodata, setweatherdata } from "../action/action";
 
 const combiner = combineReducers({
     weatherdata: setweatherdata,
-    astrodata: setastrodata
+    astrodata: setastrodata,
+    applist: setapplist
 })
 
 const store = createStore(combiner);

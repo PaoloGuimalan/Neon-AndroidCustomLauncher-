@@ -1,4 +1,4 @@
-import { SET_ASTRO, SET_WEATHER } from "../type/type";
+import { SET_APPLIST, SET_ASTRO, SET_WEATHER } from "../type/type";
 
 export const setweatherdata = (state = {}, action) => {
     switch(action.type){
@@ -13,6 +13,15 @@ export const setastrodata = (state = {}, action) => {
     switch(action.type){
         case SET_ASTRO:
             return action.astrodata;
+        default:
+            return state;
+    }
+}
+
+export const setapplist = (state = ["..."], action) => {
+    switch(action.type){
+        case SET_APPLIST:
+            return action.applist;
         default:
             return state;
     }
