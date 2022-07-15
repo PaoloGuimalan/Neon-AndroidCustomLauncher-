@@ -1,11 +1,11 @@
 import { View, Text, StyleSheet, NativeModules, ScrollView, Image, BackHandler, TouchableOpacity, ImageBackground } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
-import { appPressSound, backPress, processCommand } from '../libraries/sounds'
+import { appPressSound, backPress, processCommand, openAppList } from '../libraries/sounds'
 import Axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import ImgBg from '../res/imgs/bggradient.jpg'
-import ImgHex from '../res/imgs/bghex.png'
+import ImgHex from '../res/imgs/bgstars.jpg'
 import { SET_APPLIST } from '../redux/type/type';
 import IconSLI from 'react-native-vector-icons/SimpleLineIcons'
 
@@ -124,8 +124,8 @@ const AppList = ({navigation}) => {
 
   return (
     <View style={ApplistStyle.viewStyle}>
-      <ImageBackground source={ImgHex} style={{width: "100%", height: "100%", opacity: 0.9}}>
-      <Text style={ApplistStyle.textStyle}>AppList</Text>
+      <ImageBackground style={{width: "100%", height: "100%", opacity: 1, backgroundColor: "black"}} blurRadius={0}>
+      <Text style={ApplistStyle.textStyle}>Apps</Text>
       <View style={ApplistStyle.absoluteView}>
         {appPreview == undefined || appPreview.length == 0? (
           <View style={ApplistStyle.viewToggleApp}>
@@ -140,7 +140,7 @@ const AppList = ({navigation}) => {
           </View>
         )}
       </View>
-      <ScrollView style={ApplistStyle.scrollStyle} contentContainerStyle={ApplistStyle.scrollViewStyle}>
+      <ScrollView style={ApplistStyle.scrollStyle} contentContainerStyle={ApplistStyle.scrollViewStyle} fadingEdgeLength={100}>
         {applist.map((app, i) => {
           return(
             <TouchableOpacity key={i} onPress={() => {openApp(app)}}>
@@ -195,10 +195,10 @@ const AppList = ({navigation}) => {
           </View>
         )}
       </View>
-      <TouchableOpacity style={ApplistStyle.viewDevTools}>
+      <TouchableOpacity style={ApplistStyle.viewDevTools} onPress={() => { backPress(); navigation.navigate("DevTools") }}>
         <View  style={ApplistStyle.viewDevUnder}>
-          <Text style={{color: "lime"}}>Developer Tools</Text>
-          <IconSLI name='arrow-right' color='lime' size={15} />
+          <Text style={{color: "cyan", fontSize: 12}}>Developer Tools</Text>
+          <IconSLI name='arrow-right' color='cyan' size={12} />
         </View>
       </TouchableOpacity>
       </ImageBackground>
@@ -214,7 +214,7 @@ const ApplistStyle = StyleSheet.create({
         alignItems: "center"
     },
     textStyle:{
-        color: "lime",
+        color: "cyan",
         fontSize: 20,
         marginTop: 10,
         backgroundColor: "transparent",
@@ -222,21 +222,25 @@ const ApplistStyle = StyleSheet.create({
         textAlign: "left",
         paddingTop: 20,
         paddingBottom: 10,
-        paddingLeft: 25
+        paddingLeft: 25,
+        fontWeight: "bold"
     },
     noteStyle:{
-        color: "lime",
+        color: "cyan",
         fontSize: 15,
         margin: 2,
         textAlign: "center",
         width: "50%",
-        borderColor: "lime",
+        borderColor: "cyan",
         borderWidth: 1,
         backgroundColor: "black",
         opacity: 1,
         height: 30,
         textAlignVertical: "center",
-        borderRadius: 10
+        borderRadius: 10,
+        transform: [
+          {rotate: '0deg'}
+        ]
     },
     scrollViewStyle:{
       padding: 10,
@@ -254,7 +258,7 @@ const ApplistStyle = StyleSheet.create({
       borderRadius: 10,
       alignItems: "center",
       borderWidth: 1,
-      borderColor: "lime",
+      borderColor: "cyan",
       marginBottom: 5,
       position: "absolute",
       justifyContent: "center",
@@ -264,11 +268,11 @@ const ApplistStyle = StyleSheet.create({
       opacity: 0.7
     },
     textLabelabsolute:{
-      color: "lime"
+      color: "cyan"
     },
     viewApp:{
       borderWidth: 0,
-      borderColor: "lime",
+      borderColor: "cyan",
       marginBottom: 2
     },
     imageSizing:{
@@ -279,7 +283,7 @@ const ApplistStyle = StyleSheet.create({
       borderRadius: 40
     },
     commandLineView:{
-      borderColor: "lime",
+      borderColor: "cyan",
       borderWidth: 1,
       borderTopLeftRadius: 10,
       borderTopRightRadius: 10,
@@ -316,29 +320,29 @@ const ApplistStyle = StyleSheet.create({
       opacity: 1
     },
     labelPreview:{
-      color: "lime",
+      color: "cyan",
     },
     labelPreviewDefault:{
-      color: "lime",
+      color: "cyan",
       marginTop: 0
     },
     iconPreviewDefault:{
-      color: "lime",
+      color: "cyan",
       marginTop: 0
     },
     labelPreviewButton:{
       color: "black",
-      backgroundColor: "lime",
+      backgroundColor: "cyan",
       marginTop: 5,
       borderWidth: 1,
-      borderColor: "lime",
+      borderColor: "cyan",
       padding: 2,
       paddingLeft: 10,
       paddingRight: 10,
       borderRadius: 5
     },
     viewWeather:{
-      borderColor: "lime",
+      borderColor: "cyan",
       borderWidth: 1,
       position: "absolute",
       right: 0,
@@ -354,11 +358,11 @@ const ApplistStyle = StyleSheet.create({
       backgroundColor: "black",
     },
     textWeather:{
-      color: "lime",
+      color: "cyan",
       fontSize: 12
     },
     viewAstronomy:{
-      borderColor: "lime",
+      borderColor: "cyan",
       borderWidth: 1,
       position: "absolute",
       right: 0,
@@ -374,7 +378,7 @@ const ApplistStyle = StyleSheet.create({
       backgroundColor: "black",
     },
     viewDevTools:{
-      borderColor: "lime",
+      borderColor: "cyan",
       borderWidth: 1,
       position: "absolute",
       right: 0,
@@ -396,7 +400,7 @@ const ApplistStyle = StyleSheet.create({
       alignItems: "center"
     },
     textAstronomy:{
-      color: "lime",
+      color: "cyan",
       fontSize: 12
     },
     weatherViewResult:{
@@ -414,7 +418,7 @@ const ApplistStyle = StyleSheet.create({
       height: 40
     },
     iconAstronomy:{
-      color: "lime",
+      color: "cyan",
       margin: 10,
       marginLeft: -5
     },

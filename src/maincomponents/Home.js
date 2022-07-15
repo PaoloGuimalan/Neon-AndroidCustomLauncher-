@@ -21,7 +21,7 @@ import { SET_ASTRO, SET_WEATHER } from '../redux/type/type';
 import NetInfo from '@react-native-community/netinfo'
 import * as Animatable from 'react-native-animatable'
 import ImgBg from '../res/imgs/bggradient.jpg'
-import ImgHex from '../res/imgs/bghex.png'
+import ImgHex from '../res/imgs/bgstars.jpg'
 
 export default function Home({navigation}) {
 
@@ -242,16 +242,16 @@ export default function Home({navigation}) {
       justifyContent: 'center',
     },
     text:{
-      color: 'lime',
+      color: 'cyan',
       fontSize: 20
     },
     textSmall:{
-      color: 'lime',
+      color: 'cyan',
       fontSize: 10
     },
     viewLogo:{
       borderWidth: 2,
-      borderColor: logoColor? "lime" : "red",
+      borderColor: logoColor? "cyan" : "red",
       width: 150,
       height: 150,
       borderRadius: 150,
@@ -264,7 +264,7 @@ export default function Home({navigation}) {
       opacity: 0.9
     },
     textLogo:{
-      color: logoColor? "lime" : "red",
+      color: logoColor? "cyan" : "red",
       fontSize: 25,
       opacity: 0.9
     },
@@ -315,8 +315,8 @@ export default function Home({navigation}) {
       borderRadius: 10,
       fontSize: 12,
       borderWidth: 1,
-      borderColor: "lime",
-      color: "lime",
+      borderColor: "cyan",
+      color: "cyan",
     },
     viewDetailsTop:{
       width: "50%",
@@ -338,8 +338,8 @@ export default function Home({navigation}) {
       backgroundColor: "black",
       borderRadius: 3,
       borderWidth: 1,
-      borderColor: "lime",
-      color: "lime",
+      borderColor: "cyan",
+      color: "cyan",
       textAlign: "center",
       textAlignVertical: "center",
       fontSize: 10
@@ -366,8 +366,8 @@ export default function Home({navigation}) {
       borderRadius: 10,
       fontSize: 12,
       borderWidth: 1,
-      borderColor: "lime",
-      color: "lime",
+      borderColor: "cyan",
+      color: "cyan",
     },
     dateView:{
       backgroundColor: "black",
@@ -380,17 +380,17 @@ export default function Home({navigation}) {
       borderRadius: 10,
       fontSize: 12,
       borderWidth: 1,
-      borderColor: "lime",
-      color: "lime",
+      borderColor: "cyan",
+      color: "cyan",
       justifyContent: "center",
       alignItems: "center"
     },
     textDate:{
-      color: "lime",
+      color: "cyan",
       fontSize: 13
     },
     textTime:{
-      color: "lime",
+      color: "cyan",
       fontSize: 10
     },
     viewHomeApps:{
@@ -405,9 +405,9 @@ export default function Home({navigation}) {
       width: 50,
       height: 50,
       borderWidth: 1,
-      borderColor: "lime",
+      borderColor: "cyan",
       backgroundColor: "black",
-      color: "lime",
+      color: "cyan",
       borderRadius: 10,
       textAlign: "center",
       textAlignVertical: "center",
@@ -415,7 +415,7 @@ export default function Home({navigation}) {
     },
     miniBarStatus:{
       borderWidth: 1,
-      borderColor: "lime",
+      borderColor: "cyan",
       height: "10%",
       width: 50,
       marginTop: 20,
@@ -427,18 +427,18 @@ export default function Home({navigation}) {
       backgroundColor: "black"
     },
     connectionStatus:{
-      color: "lime"
+      color: "cyan"
     },
     viewLogoInside:{
       borderWidth: 25,
-      borderColor: logoColor? "lime" : "red",
+      borderColor: logoColor? "cyan" : "red",
       width: 140,
       height: 140,
       borderRadius: 137,
       alignItems: "center",
       justifyContent: "center",
       borderStyle: "dashed",
-      backgroundColor: "black",
+      backgroundColor: "transparent",
       opacity: 1
     }
   });
@@ -451,7 +451,7 @@ export default function Home({navigation}) {
   return (
     <View style={styles.container}>
     <StatusBar hidden={true} />
-      <ImageBackground source={ImgHex} style={{width: "100%", height: "100%", opacity: 0.9}}>
+      <ImageBackground style={{width: "100%", height: "100%", opacity: 1, backgroundColor: "black"}} blurRadius={0}>
       <View style={styles.detailsStyle}>
         <View style={styles.viewDetailsTop}>
           <Text style={styles.topLabel}>{systemBrand}</Text>
@@ -472,13 +472,17 @@ export default function Home({navigation}) {
         </View>
       </View>
       <View style={styles.middleView}>
-        <TouchableOpacity onPress={animatedLogo}>
-          <Animated.View style={styles.viewLogo}>
-              <Animatable.View animation="rotate" duration={10000} easing="linear" iterationCount="infinite" style={styles.viewLogoInside}>
-                <Animatable.Text animation="rotate" direction="reverse" duration={10000} easing="linear" iterationCount="infinite" style={styles.textLogo}>Neon</Animatable.Text>
-              </Animatable.View>
-          </Animated.View>
-        </TouchableOpacity>
+        <View style={{borderWidth: 5, borderColor: "cyan", width: 225, height: 225, borderRadius: 225, justifyContent: "center", alignItems: "center"}}>
+        <View style={{borderWidth: 1, borderColor: "cyan", width: 200, height: 200, borderRadius: 200, justifyContent: "center", alignItems: "center"}}>
+          <TouchableOpacity onPress={animatedLogo}>
+            <Animated.View style={styles.viewLogo}>
+                <Animatable.View animation="rotate" duration={10000} easing="linear" iterationCount="infinite" style={styles.viewLogoInside}>
+                  <Animatable.Text animation="rotate" direction="reverse" duration={10000} easing="linear" iterationCount="infinite" style={styles.textLogo}>Neon</Animatable.Text>
+                </Animatable.View>
+            </Animated.View>
+          </TouchableOpacity>
+        </View>
+        </View>
       </View>
       <View style={styles.bottomView}>
         <View style={styles.viewBottomUno}>

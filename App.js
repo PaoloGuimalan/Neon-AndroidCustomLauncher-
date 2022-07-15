@@ -30,6 +30,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from './src/maincomponents/Home'
 import AppList from './src/maincomponents/AppList';
+import DevTools from './src/maincomponents/DevTools';
 import { backPress } from './src/libraries/sounds';
 import { Provider } from 'react-redux';
 import store from './src/redux/store/store'
@@ -81,9 +82,10 @@ const App: () => Node = () => {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <MainStack.Navigator screenOptions={{gestureEnabled: true, animation: "slide_from_bottom"}}>
+        <MainStack.Navigator>
           <MainStack.Screen name='Home' component={Home} options={{headerShown: false}} />
-          <MainStack.Screen name='AppList' component={AppList} options={{headerShown: false}} />
+          <MainStack.Screen name='AppList' component={AppList} options={{headerShown: false, gestureEnabled: true, animation: "slide_from_bottom"}} />
+          <MainStack.Screen name='DevTools' component={DevTools} options={{headerShown: false, gestureEnabled: true, animation: "slide_from_right"}} />
         </MainStack.Navigator>
       </NavigationContainer>
     </Provider>
